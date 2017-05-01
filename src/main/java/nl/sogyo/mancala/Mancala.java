@@ -4,6 +4,6 @@ public class Mancala
 {
     public static void main(String[] args)
     {
-        Hole hole = new Hole();
+       // Hole hole1 = new Hole();
     }
 }
