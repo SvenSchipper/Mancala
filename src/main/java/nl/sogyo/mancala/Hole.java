@@ -4,21 +4,23 @@ class Hole extends Field
 {
     Hole(Player currentPlayer)
     {
+        int fieldsCreated = 1;
+
         stones = 4;
         startNode = this;
-        counter++;
+        fieldsCreated++;
         owner = currentPlayer;
-        neighbour = new Hole(counter, startNode, currentPlayer);
+        neighbour = new Hole(fieldsCreated, startNode, currentPlayer);
     }
 
-    Hole(int counter, Hole startNode, Player playerOwner)
+    Hole(int fieldsCreated, Hole startNode, Player playerOwner)
     {
-        super(counter, startNode, playerOwner);
+        super(fieldsCreated, startNode, playerOwner);
         owner = playerOwner;
         stones = 4;
     }
 
-    protected void play(Player currentPlayer)
+    void play(Player currentPlayer)
     {
         if(owner == currentPlayer)
         {
@@ -28,17 +30,17 @@ class Hole extends Field
         }
     }
 
-    protected Kalaha findKalaha()
+    Kalaha findKalaha()
     {
         return neighbour.findKalaha();
     }
 
-    protected Field findOppositeField()
+    Field findOppositeField()
     {
         return neighbour.findOppositeField().neighbour;
     }
 
-    protected void capture()
+    void capture()
     {
         ((Hole)findOppositeField()).getCaptured(findKalaha());
         getCaptured(findKalaha());
@@ -47,25 +49,16 @@ class Hole extends Field
     private void getCaptured(Kalaha kalaha)
     {
         kalaha.capture(this.stones);
-        this.stones = 0;
+        stones = 0;
     }
 
     void checkEnd()
     {
-        if(stones == 0)
+        if(neighbour.getClass() != Kalaha.class && stones == 0)
         {
-            endGame = true;
+            ((Hole)neighbour).checkEnd();
         }
-        else
-        {
-            endGame = false;
-        }
-
-        if(neighbour.getClass() != Kalaha.class && endGame)
-        {
-            neighbour.checkEnd();
-        }
-        else if(endGame)
+        else if(stones == 0)
         {
             if(this.owner.turn)
             {
@@ -82,9 +75,25 @@ class Hole extends Field
     void sweep()
     {
         findKalaha().stones += stones;
+        stones = 0;
         if(neighbour.getClass() != Kalaha.class)
         {
             neighbour.sweep();
         }
+    }
+
+    void endOfMove(Player currentPlayer)
+    {
+        if(stones == 1 && owner == currentPlayer)
+        {
+            capture();
+            currentPlayer.switchTurn();
+        }
+        else
+        {
+            currentPlayer.switchTurn();
+        }
+        turns++;
+        findKalaha().checkEndOfGame();
     }
 }

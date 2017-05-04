@@ -165,16 +165,6 @@ public class MancalaTest
     }
 
     @Test
-    public void isOpponentsKalahaAlsoSkippedForPlayer2()
-    {
-        field12.stones = 12;
-        field12.play(player2);
-        Assert.assertEquals(1, field14.stones);
-        Assert.assertEquals(0, field7.stones);
-        Assert.assertEquals(5, field8.stones);
-    }
-
-    @Test
     public void doesEndingInKalahaGrantExtraTurn()
     {
         Assert.assertEquals(true, player1.turn);

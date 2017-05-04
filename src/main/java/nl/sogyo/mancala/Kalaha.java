@@ -2,19 +2,19 @@ package nl.sogyo.mancala;
 
 class Kalaha extends Field
 {
-    Kalaha(int counter, Hole startNode, Player playerOwner)
+    Kalaha(int fieldsCreated, Hole startNode, Player playerOwner)
     {
-        super(counter, startNode, playerOwner);
+        super(fieldsCreated, startNode, playerOwner);
         owner = playerOwner;
         stones = 0;
     }
 
-    protected Kalaha findKalaha()
+    Kalaha findKalaha()
     {
         return this;
     }
 
-    protected Field findOppositeField()
+    Field findOppositeField()
     {
         return this;
     }
@@ -26,12 +26,17 @@ class Kalaha extends Field
 
     void checkEndOfGame()
     {
-        neighbour.checkEnd();
+        ((Hole)neighbour).checkEnd();
     }
 
     void sweep()
     {
        neighbour.sweep();
+    }
+
+    void endOfMove(Player currentPlayer)
+    {
+        neighbour.findKalaha().checkEndOfGame();
     }
 
 }

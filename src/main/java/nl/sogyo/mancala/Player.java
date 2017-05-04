@@ -23,7 +23,7 @@ class Player
         opponent.turn = !turn;
     }
 
-    void endGameTurn()
+    void finishGame()
     {
         this.turn = false;
         opponent.turn = false;

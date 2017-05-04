@@ -2,24 +2,19 @@ package nl.sogyo.mancala;
 
 abstract class Field
 {
-    int counter = 1;
     int stones;
     int stonesLeft;
-    private int turns;
-    Boolean endGame = false;
+    int turns;
     Hole startNode;
     Field neighbour;
     Player owner;
 
-    Field()
-    {
+    Field() {}
 
-    }
-
-    Field(int counter, Hole startNode, Player currentPlayer)
+    Field(int fieldsCreated, Hole startNode, Player currentPlayer)
     {
-        counter++;
-        if(counter < 8)
+        fieldsCreated++;
+        if(fieldsCreated < 8)
         {
             owner = currentPlayer;
         }
@@ -27,15 +22,15 @@ abstract class Field
         {
             owner = currentPlayer.opponent;
         }
-        if(counter < 15 && counter % 7 != 0)
+        if(fieldsCreated < 15 && fieldsCreated % 7 != 0)
         {
-            neighbour = new Hole(counter, startNode, owner);
+            neighbour = new Hole(fieldsCreated, startNode, owner);
         }
-        else if(counter < 15 && counter % 7 == 0)
+        else if(fieldsCreated < 15 && fieldsCreated % 7 == 0)
         {
-            neighbour = new Kalaha(counter, startNode, owner);
+            neighbour = new Kalaha(fieldsCreated, startNode, owner);
         }
-        if(counter == 15)           //links the final node to the first node, completing the circle
+        if(fieldsCreated == 15)           //links the final node to the first node, completing the circle
         {
             neighbour = startNode;
         }
@@ -62,52 +57,12 @@ abstract class Field
         }
     }
 
-    private void endOfMove(Player currentPlayer)
-    {
-        Kalaha checkEndGame;
-        if(getClass() == Kalaha.class)
-        {
-
-        }
-        else if(getClass() == Hole.class && stones == 1 && owner == currentPlayer)
-        {
-            capture();
-            currentPlayer.switchTurn();
-        }
-        else
-        {
-            currentPlayer.switchTurn();
-        }
-
-        if(owner == currentPlayer)
-        {
-            checkEndGame = findKalaha();
-        }
-        else
-        {
-            checkEndGame = findOppositeField().findKalaha();
-        }
-
-        checkEndGame.checkEndOfGame();
-    }
-
-    void checkEnd()
-    {
-
-    }
-
     void endGame(Kalaha kalaha1, Kalaha kalaha2, Player currentPlayer)
     {
+        int player1score = kalaha1.stones;
+        int player2score = kalaha2.stones;
 
-        int player1score;
-        int player2score;
-
-        if(turns%2 == 1)
-        {
-            player1score = kalaha1.stones;
-            player2score = kalaha2.stones;
-        }
-        else
+        if(turns%2 == 0)
         {
             player1score = kalaha2.stones;
             player2score = kalaha1.stones;
@@ -126,22 +81,18 @@ abstract class Field
             System.out.println("It's a tie!");
         }
 
-        currentPlayer.endGameTurn();
+        currentPlayer.finishGame();
     }
 
-    protected void play(Player currentPlayer)
-    {
+    void play(Player currentPlayer) {}
 
-    }
+    void capture() {}
 
-    protected abstract Kalaha findKalaha();
+    abstract Kalaha findKalaha();
 
-    protected abstract Field findOppositeField();
+    abstract Field findOppositeField();
 
-    protected void capture()
-    {
-
-    }
+    abstract void endOfMove(Player currentPlayer);
 
     abstract void sweep();
 }
